@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogistiK - Freight Management Platform</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e4e4e7;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Auth Pages */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        }
+
+        .auth-box {
+            background: rgba(30, 35, 60, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            padding: 48px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .auth-logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .auth-logo-text {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .auth-subtitle {
+            font-size: 15px;
+            color: #9ca3af;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .role-option {
+            padding: 16px 12px;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .role-option:hover {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .role-option.selected {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .role-icon {
+            margin-bottom: 8px;
+            color: #6366f1;
+        }
+
+        .role-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 8px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            margin-top: 2px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .checkbox-label {
+            font-size: 13px;
+            color: #d1d5db;
+            line-height: 1.5;
+        }
+
+        .checkbox-label a {
+            color: #6366f1;
+            text-decoration: none;
+        }
+
+        .checkbox-label a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .auth-divider::before {
+            margin-right: 12px;
+        }
+
+        .auth-divider::after {
+            margin-left: 12px;
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        .auth-link a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 20, 45, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding: 0 8px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-profile {
+            padding: 16px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .user-profile-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #9ca3af;
+            text-transform: capitalize;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .nav-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: #e4e4e7;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: rgba(99, 102, 241, 0.2);
+            margin: 16px 0;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 32px 48px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff 0%, #9ca3af 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #9ca3af;
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(30, 35, 60, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #d1d5db;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(15, 20, 45, 0.6);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            color: #e4e4e7;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .stat-change {
+            font-size: 13px;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .stat-change.positive {
+            color: #10b981;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: rgba(15, 20, 45, 0.95);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        /* Table */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #9ca3af;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .table tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .badge-info {
+            background: rgba(99, 102, 241, 0.2);
+            color: #6366f1;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+
+        .alert-info {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #6366f1;
+        }
+
+        /* Quote Card */
+        .quote-card {
+            background: rgba(30, 35, 60, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quote-card:hover {
+            border-color: #6366f1;
+            transform: translateX(4px);
+        }
+
+        .quote-card.selected {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .quote-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .quote-company {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .quote-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(99, 102, 241, 0.2);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+                padding: 24px 16px;
+            }
+
+            .logo-text, .nav-item span, .user-profile {
+                display: none;
+            }
+
+            .main-content {
+                padding: 24px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .role-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { Package, TrendingUp, FileText, DollarSign, BarChart3, Shield, MapPin, User, Settings, LogOut, Bell, Search, ChevronRight, CheckCircle2, AlertCircle, Truck, Users, Inbox } = lucide;
+
+        // Mock Data
+        const MOCK_USERS = {
+            'shipper@test.com': { 
+                email: 'shipper@test.com', 
+                password: 'password', 
+                role: 'shipper', 
+                name: 'John Shipper',
+                company: 'Acme Imports LLC'
+            },
+            'forwarder@test.com': { 
+                email: 'forwarder@test.com', 
+                password: 'password', 
+                role: 'forwarder', 
+                name: 'Fortune Global',
+                company: 'Fortune Global Shipping'
+            },
+            'admin@logistik.com': { 
+                email: 'admin@logistik.com', 
+                password: 'password', 
+                role: 'admin', 
+                name: 'Admin User',
+                company: 'LogistiK Inc'
+            }
+        };
+
+        // Main App Component
+        function LogistiKApp() {
+            const [currentUser, setCurrentUser] = useState(null);
+            const [showOnboarding, setShowOnboarding] = useState(false);
+
+            // Check if user is logged in (from localStorage)
+            useEffect(() => {
+                const savedUser = localStorage.getItem('logistik_user');
+                if (savedUser) {
+                    const user = JSON.parse(savedUser);
+                    setCurrentUser(user);
+                    
+                    // Check if onboarding completed
+                    const onboardingComplete = localStorage.getItem(`onboarding_${user.email}`);
+                    if (!onboardingComplete) {
+                        setShowOnboarding(true);
+                    }
+                }
+            }, []);
+
+            const handleLogin = (user) => {
+                localStorage.setItem('logistik_user', JSON.stringify(user));
+                setCurrentUser(user);
+                
+                // Check onboarding status
+                const onboardingComplete = localStorage.getItem(`onboarding_${user.email}`);
+                if (!onboardingComplete) {
+                    setShowOnboarding(true);
+                }
+            };
+
+            const handleLogout = () => {
+                localStorage.removeItem('logistik_user');
+                setCurrentUser(null);
+                setShowOnboarding(false);
+            };
+
+            const completeOnboarding = () => {
+                if (currentUser) {
+                    localStorage.setItem(`onboarding_${currentUser.email}`, 'true');
+                    setShowOnboarding(false);
+                }
+            };
+
+            if (!currentUser) {
+                return <AuthFlow onLogin={handleLogin} />;
+            }
+
+            if (showOnboarding) {
+                return <OnboardingFlow user={currentUser} onComplete={completeOnboarding} />;
+            }
+
+            return <Dashboard user={currentUser} onLogout={handleLogout} />;
+        }
+
+        // Authentication Flow
+        function AuthFlow({ onLogin }) {
+            const [mode, setMode] = useState('login'); // 'login' or 'signup'
+            const [selectedRole, setSelectedRole] = useState('shipper');
+            const [formData, setFormData] = useState({
+                email: '',
+                password: '',
+                name: '',
+                company: '',
+                agreeToTerms: false
+            });
+            const [error, setError] = useState('');
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                setError('');
+
+                if (mode === 'login') {
+                    // Login logic
+                    const user = MOCK_USERS[formData.email];
+                    if (user && user.password === formData.password) {
+                        onLogin(user);
+                    } else {
+                        setError('Invalid email or password. Try: shipper@test.com / password');
+                    }
+                } else {
+                    // Signup logic
+                    if (!formData.agreeToTerms) {
+                        setError('You must agree to the Terms of Use and Privacy Policy');
+                        return;
+                    }
+                    
+                    if (!formData.name || !formData.company) {
+                        setError('Please fill in all fields');
+                        return;
+                    }
+
+                    // Create new user
+                    const newUser = {
+                        email: formData.email,
+                        password: formData.password,
+                        role: selectedRole,
+                        name: formData.name,
+                        company: formData.company
+                    };
+                    
+                    onLogin(newUser);
+                }
+            };
+
+            return (
+                <div className="auth-container">
+                    <div className="auth-box">
+                        <div className="auth-logo">
+                            <div className="auth-logo-icon">L</div>
+                            <div className="auth-logo-text">LogistiK</div>
+                        </div>
+
+                        <h2 className="auth-title">
+                            {mode === 'login' ? 'Welcome Back' : 'Create Account'}
+                        </h2>
+                        <p className="auth-subtitle">
+                            {mode === 'login' 
+                                ? 'Sign in to access your dashboard' 
+                                : 'Join LogistiK to streamline your logistics'}
+                        </p>
+
+                        {error && (
+                            <div className="alert alert-info">
+                                <AlertCircle size={20} />
+                                <div>{error}</div>
+                            </div>
+                        )}
+
+                        <form onSubmit={handleSubmit}>
+                            {mode === 'signup' && (
+                                <>
+                                    <div className="form-group">
+                                        <label className="form-label">I am a...</label>
+                                        <div className="role-selector">
+                                            <div 
+                                                className={`role-option ${selectedRole === 'shipper' ? 'selected' : ''}`}
+                                                onClick={() => setSelectedRole('shipper')}
+                                            >
+                                                <div className="role-icon"><Package size={24} /></div>
+                                                <div className="role-label">Shipper</div>
+                                            </div>
+                                            <div 
+                                                className={`role-option ${selectedRole === 'forwarder' ? 'selected' : ''}`}
+                                                onClick={() => setSelectedRole('forwarder')}
+                                            >
+                                                <div className="role-icon"><Truck size={24} /></div>
+                                                <div className="role-label">Forwarder</div>
+                                            </div>
+                                            <div 
+                                                className={`role-option ${selectedRole === 'broker' ? 'selected' : ''}`}
+                                                onClick={() => setSelectedRole('broker')}
+                                            >
+                                                <div className="role-icon"><Users size={24} /></div>
+                                                <div className="role-label">Broker</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="form-label">Full Name</label>
+                                        <input 
+                                            type="text"
+                                            className="form-input"
+                                            placeholder="John Doe"
+                                            value={formData.name}
+                                            onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="form-label">Company Name</label>
+                                        <input 
+                                            type="text"
+                                            className="form-input"
+                                            placeholder="Acme Imports LLC"
+                                            value={formData.company}
+                                            onChange={(e) => setFormData({...formData, company: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                </>
+                            )}
+
+                            <div className="form-group">
+                                <label className="form-label">Email Address</label>
+                                <input 
+                                    type="email"
+                                    className="form-input"
+                                    placeholder="you@company.com"
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Password</label>
+                                <input 
+                                    type="password"
+                                    className="form-input"
+                                    placeholder="••••••••"
+                                    value={formData.password}
+                                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                                    required
+                                />
+                            </div>
+
+                            {mode === 'signup' && (
+                                <div className="checkbox-container">
+                                    <input 
+                                        type="checkbox"
+                                        id="terms"
+                                        checked={formData.agreeToTerms}
+                                        onChange={(e) => setFormData({...formData, agreeToTerms: e.target.checked})}
+                                    />
+                                    <label htmlFor="terms" className="checkbox-label">
+                                        I agree to LogistiK's <a href="#" onClick={(e) => e.preventDefault()}>Terms of Use</a> and <a href="#" onClick={(e) => e.preventDefault()}>Privacy Policy</a>. I understand that my data will be processed in accordance with these terms.
+                                    </label>
+                                </div>
+                            )}
+
+                            <button type="submit" className="btn btn-primary" style={{width: '100%'}}>
+                                {mode === 'login' ? 'Sign In' : 'Create Account'}
+                                <ChevronRight size={18} />
+                            </button>
+                        </form>
+
+                        <div className="auth-divider">or</div>
+
+                        <div className="auth-link">
+                            {mode === 'login' ? (
+                                <>
+                                    Don't have an account? <a href="#" onClick={() => setMode('signup')}>Sign up</a>
+                                </>
+                            ) : (
+                                <>
+                                    Already have an account? <a href="#" onClick={() => setMode('login')}>Sign in</a>
+                                </>
+                            )}
+                        </div>
+
+                        {mode === 'login' && (
+                            <div style={{ marginTop: '24px', padding: '16px', background: 'rgba(99, 102, 241, 0.05)', borderRadius: '8px', fontSize: '13px', color: '#9ca3af' }}>
+                                <strong>Demo Accounts:</strong><br/>
+                                Shipper: shipper@test.com / password<br/>
+                                Forwarder: forwarder@test.com / password<br/>
+                                Admin: admin@logistik.com / password
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Onboarding Flow
+        function OnboardingFlow({ user, onComplete }) {
+            const [step, setStep] = useState(1);
+            const [profileData, setProfileData] = useState({
+                phone: '',
+                address: '',
+                preferredPorts: [],
+                shippingVolume: '',
+                commodities: ''
+            });
+
+            const handleComplete = () => {
+                // Save onboarding data
+                localStorage.setItem(`profile_${user.email}`, JSON.stringify(profileData));
+                onComplete();
+            };
+
+            const getStepContent = () => {
+                if (step === 1) {
+                    return (
+                        <div>
+                            <h2 className="modal-title">Welcome to LogistiK, {user.name}! 👋</h2>
+                            <p style={{ color: '#9ca3af', marginBottom: '24px', lineHeight: '1.6' }}>
+                                Let's get your account set up. This will only take 2 minutes.
+                            </p>
+                            
+                            <div className="alert alert-info" style={{ marginBottom: '24px' }}>
+                                <CheckCircle2 size={20} />
+                                <div>
+                                    <strong>You're signed up as a {user.role}</strong><br/>
+                                    Company: {user.company}
+                                </div>
+                            </div>
+
+                            <button onClick={() => setStep(2)} className="btn btn-primary" style={{ width: '100%' }}>
+                                Continue Setup
+                                <ChevronRight size={18} />
+                            </button>
+                        </div>
+                    );
+                } else if (step === 2) {
+                    return (
+                        <div>
+                            <h2 className="modal-title">Contact Information</h2>
+                            
+                            <div className="form-group">
+                                <label className="form-label">Phone Number</label>
+                                <input 
+                                    type="tel"
+                                    className="form-input"
+                                    placeholder="+1 (555) 123-4567"
+                                    value={profileData.phone}
+                                    onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Business Address</label>
+                                <input 
+                                    type="text"
+                                    className="form-input"
+                                    placeholder="123 Main St, Boston, MA 02101"
+                                    value={profileData.address}
+                                    onChange={(e) => setProfileData({...profileData, address: e.target.value})}
+                                />
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '12px' }}>
+                                <button onClick={() => setStep(1)} className="btn btn-secondary">
+                                    Back
+                                </button>
+                                <button onClick={() => setStep(3)} className="btn btn-primary" style={{ flex: 1 }}>
+                                    Continue
+                                    <ChevronRight size={18} />
+                                </button>
+                            </div>
+                        </div>
+                    );
+                } else if (step === 3) {
+                    return (
+                        <div>
+                            <h2 className="modal-title">Shipping Preferences</h2>
+                            
+                            {user.role === 'shipper' && (
+                                <>
+                                    <div className="form-group">
+                                        <label className="form-label">Monthly Shipping Volume</label>
+                                        <select 
+                                            className="form-select"
+                                            value={profileData.shippingVolume}
+                                            onChange={(e) => setProfileData({...profileData, shippingVolume: e.target.value})}
+                                        >
+                                            <option value="">Select volume</option>
+                                            <option value="1-5">1-5 containers/month</option>
+                                            <option value="6-20">6-20 containers/month</option>
+                                            <option value="21-50">21-50 containers/month</option>
+                                            <option value="50+">50+ containers/month</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="form-label">Primary Commodities</label>
+                                        <input 
+                                            type="text"
+                                            className="form-input"
+                                            placeholder="Auto parts, Coffee, Textiles"
+                                            value={profileData.commodities}
+                                            onChange={(e) => setProfileData({...profileData, commodities: e.target.value})}
+                                        />
+                                    </div>
+                                </>
+                            )}
+
+                            {user.role === 'forwarder' && (
+                                <div className="form-group">
+                                    <label className="form-label">Service Coverage</label>
+                                    <input 
+                                        type="text"
+                                        className="form-input"
+                                        placeholder="US East Coast, West Africa, Europe"
+                                        value={profileData.commodities}
+                                        onChange={(e) => setProfileData({...profileData, commodities: e.target.value})}
+                                    />
+                                </div>
+                            )}
+
+                            <div style={{ display: 'flex', gap: '12px' }}>
+                                <button onClick={() => setStep(2)} className="btn btn-secondary">
+                                    Back
+                                </button>
+                                <button onClick={handleComplete} className="btn btn-primary" style={{ flex: 1 }}>
+                                    Complete Setup
+                                    <CheckCircle2 size={18} />
+                                </button>
+                            </div>
+                        </div>
+                    );
+                }
+            };
+
+            return (
+                <div className="auth-container">
+                    <div className="auth-box">
+                        <div style={{ marginBottom: '24px' }}>
+                            <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                                {[1, 2, 3].map(s => (
+                                    <div 
+                                        key={s}
+                                        style={{
+                                            flex: 1,
+                                            height: '4px',
+                                            background: s <= step ? '#6366f1' : 'rgba(99, 102, 241, 0.2)',
+                                            borderRadius: '2px'
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                            <div style={{ fontSize: '13px', color: '#9ca3af' }}>
+                                Step {step} of 3
+                            </div>
+                        </div>
+
+                        {getStepContent()}
+                    </div>
+                </div>
+            );
+        }
+
+        // Dashboard Component
+        function Dashboard({ user, onLogout }) {
+            const [currentPage, setCurrentPage] = useState('dashboard');
+            const [showSettings, setShowSettings] = useState(false);
+            const [showProfile, setShowProfile] = useState(false);
+
+            // Get navigation items based on role
+            const getNavItems = () => {
+                const commonItems = [
+                    { id: 'dashboard', icon: BarChart3, label: 'Dashboard' }
+                ];
+
+                if (user.role === 'shipper') {
+                    return [
+                        ...commonItems,
+                        { id: 'marketplace', icon: Package, label: 'Get Quotes' },
+                        { id: 'shipments', icon: MapPin, label: 'My Shipments' },
+                        { id: 'customs', icon: FileText, label: 'Customs Docs' },
+                        { id: 'payments', icon: DollarSign, label: 'Payments' },
+                        { id: 'insurance', icon: Shield, label: 'Insurance' }
+                    ];
+                } else if (user.role === 'forwarder') {
+                    return [
+                        ...commonItems,
+                        { id: 'quote-requests', icon: Inbox, label: 'Quote Requests' },
+                        { id: 'bookings', icon: Package, label: 'Bookings' },
+                        { id: 'customers', icon: Users, label: 'Customers' },
+                        { id: 'rates', icon: DollarSign, label: 'Rate Management' }
+                    ];
+                } else {
+                    return [
+                        ...commonItems,
+                        { id: 'users', icon: Users, label: 'User Management' },
+                        { id: 'analytics', icon: BarChart3, label: 'Analytics' },
+                        { id: 'settings-admin', icon: Settings, label: 'Platform Settings' }
+                    ];
+                }
+            };
+
+            return (
+                <div className="app-container">
+                    <Sidebar 
+                        user={user}
+                        currentPage={currentPage} 
+                        setCurrentPage={setCurrentPage}
+                        navItems={getNavItems()}
+                        onSettings={() => setShowSettings(true)}
+                        onProfile={() => setShowProfile(true)}
+                        onLogout={onLogout}
+                    />
+                    <main className="main-content">
+                        {currentPage === 'dashboard' && <DashboardPage user={user} />}
+                        {currentPage === 'marketplace' && <MarketplacePage user={user} />}
+                        {currentPage === 'shipments' && <ShipmentsPage user={user} />}
+                        {currentPage === 'quote-requests' && <QuoteRequestsPage user={user} />}
+                        {currentPage === 'bookings' && <BookingsPage user={user} />}
+                        {currentPage === 'customers' && <CustomersPage user={user} />}
+                    </main>
+
+                    {showSettings && (
+                        <SettingsModal user={user} onClose={() => setShowSettings(false)} />
+                    )}
+
+                    {showProfile && (
+                        <ProfileModal user={user} onClose={() => setShowProfile(false)} />
+                    )}
+                </div>
+            );
+        }
+
+        // Sidebar Component
+        function Sidebar({ user, currentPage, setCurrentPage, navItems, onSettings, onProfile, onLogout }) {
+            return (
+                <aside className="sidebar">
+                    <div className="logo">
+                        <div className="logo-icon">L</div>
+                        <div className="logo-text">LogistiK</div>
+                    </div>
+
+                    <div className="user-profile">
+                        <div className="user-profile-header">
+                            <div className="user-avatar">
+                                {user.name.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <div className="user-info">
+                                <div className="user-name">{user.name}</div>
+                                <div className="user-role">{user.role}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="nav-section">
+                        <div className="nav-section-title">Main Menu</div>
+                        {navItems.map(item => (
+                            <div
+                                key={item.id}
+                                className={`nav-item ${currentPage === item.id ? 'active' : ''}`}
+                                onClick={() => setCurrentPage(item.id)}
+                            >
+                                <item.icon />
+                                <span>{item.label}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="nav-divider"></div>
+
+                    <div className="nav-section">
+                        <div className="nav-section-title">Account</div>
+                        <div className="nav-item" onClick={onProfile}>
+                            <User />
+                            <span>Profile</span>
+                        </div>
+                        <div className="nav-item" onClick={onSettings}>
+                            <Settings />
+                            <span>Settings</span>
+                        </div>
+                        <div className="nav-item" onClick={onLogout}>
+                            <LogOut />
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </aside>
+            );
+        }
+
+        // Dashboard Pages by Role
+        function DashboardPage({ user }) {
+            if (user.role === 'shipper') {
+                return (
+                    <div>
+                        <div className="page-header">
+                            <h1 className="page-title">Dashboard</h1>
+                            <p className="page-subtitle">Welcome back, {user.name}</p>
+                        </div>
+
+                        <div className="stats-grid">
+                            <div className="stat-card">
+                                <div className="stat-label">Active Shipments</div>
+                                <div className="stat-value">3</div>
+                                <div className="stat-change positive">+2 this month</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-label">Total Spent</div>
+                                <div className="stat-value">$15,400</div>
+                                <div className="stat-change positive">15% below avg</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-label">On-Time Delivery</div>
+                                <div className="stat-value">100%</div>
+                            </div>
+                        </div>
+
+                        <div className="card">
+                            <h3 style={{ marginBottom: '16px', fontSize: '18px', fontWeight: 600 }}>Quick Actions</h3>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+                                <button className="btn btn-primary">Get Quote</button>
+                                <button className="btn btn-secondary">Track Shipment</button>
+                                <button className="btn btn-secondary">Generate Customs Doc</button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            } else if (user.role === 'forwarder') {
+                return (
+                    <div>
+                        <div className="page-header">
+                            <h1 className="page-title">Freight Forwarder Dashboard</h1>
+                            <p className="page-subtitle">Welcome back, {user.company}</p>
+                        </div>
+
+                        <div className="stats-grid">
+                            <div className="stat-card">
+                                <div className="stat-label">Pending Quotes</div>
+                                <div className="stat-value">7</div>
+                                <div className="stat-change positive">+3 new today</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-label">Active Bookings</div>
+                                <div className="stat-value">12</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-label">Revenue (MTD)</div>
+                                <div className="stat-value">$45K</div>
+                                <div className="stat-change positive">+18% vs last month</div>
+                            </div>
+                        </div>
+
+                        <div className="card">
+                            <h3 style={{ marginBottom: '16px', fontSize: '18px', fontWeight: 600 }}>Recent Quote Requests</h3>
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>Route</th>
+                                        <th>Container</th>
+                                        <th>Requested</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Newark → Lagos</td>
+                                        <td>20ft FCL</td>
+                                        <td>2 hours ago</td>
+                                        <td><span className="badge badge-warning">Pending</span></td>
+                                        <td><button className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '13px' }}>Quote</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                );
+            } else {
+                return (
+                    <div>
+                        <div className="page-header">
+                            <h1 className="page-title">Admin Dashboard</h1>
+                            <p className="page-subtitle">Platform Overview</p>
+                        </div>
+
+                        <div className="stats-grid">
+                            <div className="stat-card">
+                                <div className="stat-label">Total Users</div>
+                                <div className="stat-value">245</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-label">Active Shipments</div>
+                                <div className="stat-value">87</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-label">Platform Revenue</div>
+                                <div className="stat-value">$125K</div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        }
+
+        // Marketplace Page (Shipper)
+        function MarketplacePage({ user }) {
+            return (
+                <div>
+                    <div className="page-header">
+                        <h1 className="page-title">Get Instant Quotes</h1>
+                        <p className="page-subtitle">Compare rates from 5+ freight forwarders</p>
+                    </div>
+                    <div className="card">
+                        <p style={{ color: '#9ca3af' }}>Quote request form would go here (same as original MVP)</p>
+                    </div>
+                </div>
+            );
+        }
+
+        // Shipments Page (Shipper)
+        function ShipmentsPage({ user }) {
+            return (
+                <div>
+                    <div className="page-header">
+                        <h1 className="page-title">My Shipments</h1>
+                        <p className="page-subtitle">Track all your active shipments</p>
+                    </div>
+                    <div className="card">
+                        <p style={{ color: '#9ca3af' }}>Shipment tracking table would go here</p>
+                    </div>
+                </div>
+            );
+        }
+
+        // Quote Requests Page (Forwarder)
+        function QuoteRequestsPage({ user }) {
+            return (
+                <div>
+                    <div className="page-header">
+                        <h1 className="page-title">Quote Requests</h1>
+                        <p className="page-subtitle">Respond to shipper quote requests</p>
+                    </div>
+                    <div className="card">
+                        <p style={{ color: '#9ca3af' }}>Quote request inbox would go here</p>
+                    </div>
+                </div>
+            );
+        }
+
+        // Bookings Page (Forwarder)
+        function BookingsPage({ user }) {
+            return (
+                <div>
+                    <div className="page-header">
+                        <h1 className="page-title">Bookings</h1>
+                        <p className="page-subtitle">Manage your confirmed shipments</p>
+                    </div>
+                    <div className="card">
+                        <p style={{ color: '#9ca3af' }}>Bookings management would go here</p>
+                    </div>
+                </div>
+            );
+        }
+
+        // Customers Page (Forwarder)
+        function CustomersPage({ user }) {
+            return (
+                <div>
+                    <div className="page-header">
+                        <h1 className="page-title">Customers</h1>
+                        <p className="page-subtitle">Manage your shipper relationships</p>
+                    </div>
+                    <div className="card">
+                        <p style={{ color: '#9ca3af' }}>Customer CRM would go here</p>
+                    </div>
+                </div>
+            );
+        }
+
+        // Settings Modal
+        function SettingsModal({ user, onClose }) {
+            const [settings, setSettings] = useState({
+                emailNotifications: true,
+                smsNotifications: false,
+                marketingEmails: true,
+                language: 'en'
+            });
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal" onClick={(e) => e.stopPropagation()}>
+                        <h2 className="modal-title">Settings</h2>
+                        
+                        <div style={{ marginBottom: '24px' }}>
+                            <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>Notifications</h3>
+                            
+                            <div style={{ marginBottom: '16px' }}>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                                    <input 
+                                        type="checkbox" 
+                                        checked={settings.emailNotifications}
+                                        onChange={(e) => setSettings({...settings, emailNotifications: e.target.checked})}
+                                    />
+                                    <span>Email notifications</span>
+                                </label>
+                            </div>
+
+                            <div style={{ marginBottom: '16px' }}>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                                    <input 
+                                        type="checkbox" 
+                                        checked={settings.smsNotifications}
+                                        onChange={(e) => setSettings({...settings, smsNotifications: e.target.checked})}
+                                    />
+                                    <span>SMS notifications</span>
+                                </label>
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                                    <input 
+                                        type="checkbox" 
+                                        checked={settings.marketingEmails}
+                                        onChange={(e) => setSettings({...settings, marketingEmails: e.target.checked})}
+                                    />
+                                    <span>Marketing emails</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div style={{ marginBottom: '24px' }}>
+                            <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>Preferences</h3>
+                            
+                            <div className="form-group">
+                                <label className="form-label">Language</label>
+                                <select 
+                                    className="form-select"
+                                    value={settings.language}
+                                    onChange={(e) => setSettings({...settings, language: e.target.value})}
+                                >
+                                    <option value="en">English</option>
+                                    <option value="fr">French</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '12px' }}>
+                            <button onClick={onClose} className="btn btn-secondary">
+                                Cancel
+                            </button>
+                            <button onClick={onClose} className="btn btn-primary" style={{ flex: 1 }}>
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Profile Modal
+        function ProfileModal({ user, onClose }) {
+            const savedProfile = JSON.parse(localStorage.getItem(`profile_${user.email}`) || '{}');
+            const [profileData, setProfileData] = useState({
+                name: user.name,
+                company: user.company,
+                email: user.email,
+                phone: savedProfile.phone || '',
+                address: savedProfile.address || ''
+            });
+
+            const handleSave = () => {
+                localStorage.setItem(`profile_${user.email}`, JSON.stringify(profileData));
+                onClose();
+            };
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal" onClick={(e) => e.stopPropagation()}>
+                        <h2 className="modal-title">Edit Profile</h2>
+                        
+                        <div className="form-group">
+                            <label className="form-label">Full Name</label>
+                            <input 
+                                type="text"
+                                className="form-input"
+                                value={profileData.name}
+                                onChange={(e) => setProfileData({...profileData, name: e.target.value})}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Company</label>
+                            <input 
+                                type="text"
+                                className="form-input"
+                                value={profileData.company}
+                                onChange={(e) => setProfileData({...profileData, company: e.target.value})}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Email</label>
+                            <input 
+                                type="email"
+                                className="form-input"
+                                value={profileData.email}
+                                disabled
+                                style={{ opacity: 0.6 }}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Phone</label>
+                            <input 
+                                type="tel"
+                                className="form-input"
+                                value={profileData.phone}
+                                onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Address</label>
+                            <input 
+                                type="text"
+                                className="form-input"
+                                value={profileData.address}
+                                onChange={(e) => setProfileData({...profileData, address: e.target.value})}
+                            />
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '12px' }}>
+                            <button onClick={onClose} className="btn btn-secondary">
+                                Cancel
+                            </button>
+                            <button onClick={handleSave} className="btn btn-primary" style={{ flex: 1 }}>
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render App
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<LogistiKApp />);
+    </script>
+</body>
+</html>
